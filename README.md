@@ -1,192 +1,89 @@
-DosisCalc
-Calculadora educativa de dosis de medicamentos por peso, con soporte para vía Oral y Intravenosa, conversiones según presentación (mg↔mL/unidad) e integración con Supabase (PostgreSQL) para catálogos, reglas y registro de consultas.
+# DosisCalc
+Calculadora **educativa** de dosis de medicamentos por peso, con soporte para vía **Oral** e **Intravenosa**, conversión según presentación (mg ↔ mL/unidad) e integración con **Supabase (PostgreSQL)** para catálogos, reglas y registro de consultas.
+> Aviso: Proyecto únicamente educativo. No sustituye criterio clínico ni protocolos institucionales.
+---
+## Características
+- Selección de medicamento, vía de administración y presentación.
+- Cálculo orientativo basado en peso:
+  - `mg/kg/dosis` (por toma).
+  - `mg/kg/día` (por día fraccionado).
+- Conversión a volumen/unidades usando la presentación (ej. mg por 5 mL, mg por 1 unidad).
+- Validación de reglas configuradas para (medicamento + vía + esquema).
+- Historial de consultas (opcional) en base de datos.
+- UI simple y responsive con tabs por vía.
+- Reporte/impresión (si el módulo está habilitado).
+---
+## Tecnologías
+- **Frontend:** React + Vite
+- **UI/Icons:** Tailwind CSS (si aplica) + lucide-react
+- **Backend as a Service:** Supabase
+- **Base de datos:** PostgreSQL
+---
+## Estructura del proyecto
+calculadora-dosis/
+  public/
+    appstore.png
+    Icon_DosisCalc.png
+  src/
+    assets/
+    components/
+      DosisForm.jsx
+      DosisHeader.jsx
+      DosisResults.jsx
+      Glossary.jsx
+      ViaTabs.jsx
+    lib/
+      supabaseClient.js
+    services/
+      pdfReport.js
+    App.css
+    App.jsx
+    index.css
+    main.jsx
+  .env
+  .gitignore
+  eslint.config.js
+  index.html
+  package-lock.json
+  package.json
+  README.md
+  vite.config.js
 
-Aviso: Este proyecto es únicamente educativo. No sustituye criterio clínico ni protocolos institucionales. La dosificación real debe ser validada por un profesional de salud y fuentes oficiales.
 
-Características
-Selección de medicamento, vía de administración y presentación.
-
-Cálculo orientativo de dosis basada en peso:
-
-Esquemas: mg/kg/dosis y mg/kg/día.
-
-Conversión a volumen/unidades usando la presentación seleccionada (ej. mg por 5 mL, mg por 1 unidad).
-
-Validación de existencia de regla para (medicamento + vía + esquema).
-
-Historial de consultas (opcional) en base de datos.
-
-UI simple y responsive con tabs por vía.
-
-Generación de reporte/impresión (si está habilitado en el módulo de reportes).
-
-Tecnologías
-Frontend: React + Vite
-
-UI/Icons: Tailwind CSS (si aplica) y lucide-react
-
-Backend as a Service: Supabase
-
-Base de datos: PostgreSQL
-
-API: Supabase client (JS)
-
-Estructura del proyecto
-Ruta principal (frontend):
-
-src/components/
-
-DosisForm.jsx: formulario principal (selección + entradas).
-
-DosisHeader.jsx: encabezado (logo/título).
-
-DosisResults.jsx: salida del cálculo.
-
-ViaTabs.jsx: tabs para cambiar de vía.
-
-Glossary.jsx: glosario/ayuda (si aplica).
-
-src/lib/
-
-supabaseClient.js: inicialización del cliente de Supabase.
-
-src/services/
-
-pdfReport.js: generación de reporte PDF (si aplica).
-
-public/
-
-íconos/recursos estáticos (ej. Icon_DosisCalc.png).
-
-index.html: favicon y meta tags.
-
-vite.config.js: configuración de Vite.
-
-Modelo de datos (resumen)
-La app consulta principalmente:
-
-via_administracion: catálogo (Oral/Intravenosa).
-
-tipo_medicamento: clasificación.
-
-esquema_dosis: mg/kg/dosis o mg/kg/día.
-
-medicamento: genérico/comercial.
-
-presentacion_medicamento: forma, concentración y volumen (para conversiones).
-
-regla_dosis: rangos/intervalos/tomas por día (validación y guía).
-
-consulta_dosis (opcional): historial de cálculos.
-
-Notas:
-
-Los “viales en polvo” (p. ej. ceftriaxona) se manejan como mg de producto; si se requiere guiar reconstitución/dilución, se usa preparacion_parenteral.
-
-Requisitos
-Node.js 18+ (recomendado)
-
-Cuenta y proyecto en Supabase
-
-Git (opcional, para contribuir)
-
-Instalación
-Clona el repositorio e instala dependencias:
-
-bash
+---
+## Requisitos
+- Node.js 18+ (recomendado)
+- Proyecto creado en Supabase y tablas/datos cargados (vías, medicamentos, presentaciones y reglas)
+---
+## Instalación
 git clone https://github.com/KUROKAWAI/dosiscalc.git
 cd dosiscalc
 npm install
-Variables de entorno
-Crea un archivo .env en la raíz:
 
-bash
+---
+## Variables de entorno
+Crea un archivo `.env` en la raíz:
 VITE_SUPABASE_URL=TU_SUPABASE_URL
 VITE_SUPABASE_ANON_KEY=TU_SUPABASE_ANON_KEY
-Importante:
 
-No subas .env a GitHub (debe estar en .gitignore).
-
-La anon key es pública para el cliente, pero igual se recomienda usar RLS/policies en Supabase si expones tablas.
-
-Configuración de base de datos
-Crea un proyecto en Supabase.
-
-Ejecuta el SQL del esquema (tablas) en el SQL Editor.
-
-Inserta datos iniciales (catálogos, medicamentos, presentaciones, reglas).
-
-Sugerencia:
-
-Mantén las reglas en regla_dosis completas; si falta una regla para un medicamento/vía, la UI mostrará el mensaje de “No existe una regla…”.
-
-Ejecución en desarrollo
-bash
+> No subas `.env` al repositorio (debe estar en `.gitignore`).
+---
+## Configuración de base de datos (Supabase)
+1. Crear proyecto en Supabase.
+2. Ejecutar el SQL del esquema (tablas).
+3. Insertar datos iniciales (vías, tipos, medicamentos, presentaciones y reglas).
+---
+## Ejecutar en desarrollo
 npm run dev
-Abre la URL que te muestra Vite (ej. http://localhost:5173).
-
-Build de producción
-bash
+---
+## Build de producción
 npm run build
 npm run preview
-Uso básico
-Selecciona la vía (Oral o Intravenosa).
-
-Selecciona medicamento y presentación.
-
-Ingresa peso (kg).
-
-Ingresa dosis prescrita según el esquema (mg/kg/dosis o mg/kg/día) y el intervalo/tomas si aplica.
-
-Presiona Calcular.
-
-La app:
-
-Verifica reglas disponibles en base de datos.
-
-Calcula dosis total (mg) y la convierte a mL/unidades usando la presentación seleccionada.
-
-Alcance y limitaciones
-Alcance actual:
-
-Calculadora educativa por peso con reglas configurables en BD.
-
-Conversión por presentación para administración práctica.
-
-Historial básico de consultas.
-
-No incluye (por ahora):
-
-Ajustes por edad, función renal/hepática, diagnósticos específicos.
-
-Máximos absolutos por dosis/día por fármaco.
-
-Interacciones, contraindicaciones, alertas clínicas avanzadas.
-
-Recomendaciones terapéuticas; solo aplica reglas cargadas.
-
-Buenas prácticas y seguridad
-Define políticas RLS en Supabase si el proyecto es público.
-
-Separa entornos (dev/prod) si vas a desplegar.
-
-Mantén control de versiones de tu SQL (migrations o scripts).
-
-Documenta claramente el origen de reglas (fuentes/protocolos) si en el futuro deja de ser “educativo”.
-
-Contribución
-Haz fork del repo.
-
-Crea una rama: git checkout -b feature/nueva-funcionalidad
-
-Commit: git commit -m "Agrega X"
-
-Push: git push origin feature/nueva-funcionalidad
-
-Abre un Pull Request.
-
-Licencia
-Sin licencia definida (por defecto). Si deseas permitir uso/modificación, agrega una licencia (MIT/Apache-2.0, etc.).
-
-Autor
-KUROKAWAI
+---
+## Alcance y limitaciones
+- La app calcula en base a reglas cargadas en `regla_dosis`; si no existe regla para un medicamento/vía, el sistema lo indica.
+- No incluye ajustes clínicos avanzados (edad, función renal/hepática, diagnósticos, contraindicaciones).
+- Los resultados son orientativos y dependen de que los datos en Supabase estén correctos y completos.
+---
+## Licencia
+Sin licencia definida por el momento.
